@@ -138,9 +138,8 @@ select * from view2;
 delimiter //
 create trigger if not exists ARB before insert on owns for each row
 begin
-if new.did in (select did from participated
-where damageamt in ( select sum(damageamt) from participated )
-and damageamt > 50000)
+if new.did in (select driver_id from participated group by driver_id
+having sum(damage_amount) >= 50000)
 then
 signal sqlstate '45000'
 set message_text = "Greater than 500000";
